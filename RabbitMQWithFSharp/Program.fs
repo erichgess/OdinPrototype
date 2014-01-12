@@ -4,16 +4,23 @@
 open RabbitMQ.Client
 open System.Text
 
+let CreateConnectionFactory () = new ConnectionFactory()
+let GetConnection (factory:ConnectionFactory) = factory.CreateConnection ()
+let GetChannel (connection:IConnection) = connection.CreateModel()
+
+let PublishMessage (channel:IModel) (message:string) =
+    let encodedMessage = Encoding.UTF8.GetBytes(message)
+    channel.BasicPublish ( "", "fsharp-queue", null, encodedMessage )
+
 [<EntryPoint>]
 let main argv = 
-    let connectionFactory = new ConnectionFactory()
-    let connection = connectionFactory.CreateConnection()
-    let channel = connection.CreateModel()
+    let connectionFactory = CreateConnectionFactory ()
+    let connection = GetConnection connectionFactory
+    let channel = GetChannel connection
 
     channel.QueueDeclare( "fsharp-queue", false, false, false, null) |> ignore
 
-    let message = Encoding.UTF8.GetBytes("Now is the time for all good men to come to the aid of their country.")
-    channel.BasicPublish("", "fsharp-queue", null, message);
+    PublishMessage channel "Hello"
 
     channel.Close()
     connection.Close()
