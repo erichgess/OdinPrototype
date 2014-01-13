@@ -3,20 +3,19 @@
 
 open RabbitMQ.Client
 open System.Text
+open MyConsumer
+
+let CreateConnectionFactory () = new ConnectionFactory()
+let GetConnection (factory:ConnectionFactory) = factory.CreateConnection ()
+let GetChannel (connection:IConnection) = connection.CreateModel()
 
 [<EntryPoint>]
 let main argv = 
-    let connectionFactory = new ConnectionFactory()
-    let connection = connectionFactory.CreateConnection()
-    let channel = connection.CreateModel()
+    let connectionFactory = CreateConnectionFactory ()
+    let connection = GetConnection connectionFactory
+    let channel = GetChannel connection
 
-    channel.QueueDeclare("fsharp-queue", false, false, false, null)
-
-    let result = channel.BasicGet("fsharp-queue", true)
-
-    if result <> null then
-        let message = Encoding.UTF8.GetString(result.Body)
-        printfn "%s" message
+    channel.BasicConsume("fsharp-queue", true, new MyConsumer(channel)) |> ignore
 
     channel.Close()
     connection.Close()
