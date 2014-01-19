@@ -20,7 +20,9 @@ let main argv =
 
     channel.QueueDeclare( "fsharp-queue", false, false, false, null) |> ignore
 
-    PublishMessage channel "Hello"
+    while true do
+        PublishMessage channel "Hello"
+        System.Threading.Thread.Sleep(5000)
 
     channel.Close()
     connection.Close()
