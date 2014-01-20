@@ -11,7 +11,7 @@ let GetChannel (connection:IConnection) = connection.CreateModel()
 
 let Consume (channel:IModel) queue = 
     let consumer = new MyConsumer(channel)
-    channel.BasicConsume(queue, false, consumer) |> ignore
+    channel.BasicConsume(queue, true, consumer) |> ignore
     consumer
 
 [<EntryPoint>]
@@ -19,6 +19,7 @@ let main argv =
     let connectionFactory = CreateConnectionFactory ()
     let connection = GetConnection connectionFactory
     let channel = GetChannel connection
+    channel.QueueDeclare( "fsharp-queue", false, false, false, null) |> ignore
 
     Consume channel "fsharp-queue" |> ignore
 
