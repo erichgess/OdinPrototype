@@ -22,7 +22,7 @@ let main argv =
 
     while true do
         PublishMessage channel "Hello"
-        System.Threading.Thread.Sleep(5000)
+        System.Threading.Thread.Sleep(100)
 
     channel.Close()
     connection.Close()

@@ -51,6 +51,7 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MyMailboxProcessor.fs" />
     <Compile Include="MyConsumer.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />

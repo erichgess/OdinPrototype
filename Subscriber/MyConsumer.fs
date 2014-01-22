@@ -2,6 +2,7 @@
 
 open RabbitMQ.Client
 open System.Text
+open MyMailboxProcessor
 
 type MyConsumer (model:IModel) =
     member this.Model = model
@@ -14,7 +15,7 @@ type MyConsumer (model:IModel) =
         member this.HandleBasicDeliver (consumerTag:string, deliveryTag:uint64, redelivered:bool, exchange:string, routingKey:string, properties:IBasicProperties, body:byte[]) = 
             if body <> null then
                 let message = Encoding.UTF8.GetString(body)
-                printfn "%s" message
+                printMailbox.Post(message)
             ()
 
         member this.add_ConsumerCancelled  (value:Events.ConsumerCancelledEventHandler) = ()
