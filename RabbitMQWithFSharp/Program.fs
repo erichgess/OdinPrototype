@@ -3,13 +3,14 @@
 
 open RabbitMQ.Client
 open System.Text
+open MessageContracts
 
 let CreateConnectionFactory () = new ConnectionFactory()
 let GetConnection (factory:ConnectionFactory) = factory.CreateConnection ()
 let GetChannel (connection:IConnection) = connection.CreateModel()
 
-let PublishMessage (channel:IModel) (message:string) =
-    let encodedMessage = Encoding.UTF8.GetBytes(message)
+let PublishMessage (channel:IModel) (message) =
+    let encodedMessage = message
     channel.BasicPublish ( "", "fsharp-queue", null, encodedMessage )
 
 [<EntryPoint>]
@@ -21,7 +22,8 @@ let main argv =
     channel.QueueDeclare( "fsharp-queue", false, false, false, null) |> ignore
 
     while true do
-        PublishMessage channel (System.DateTime.Now.ToString())
+        PublishMessage channel (TypeA(5).Encode())
+        PublishMessage channel (TypeB("string").Encode())
         System.Threading.Thread.Sleep(100)
 
     channel.Close()

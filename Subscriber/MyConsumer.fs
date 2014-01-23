@@ -3,6 +3,7 @@
 open RabbitMQ.Client
 open System.Text
 open MyMailboxProcessor
+open MessageContracts
 
 type MyConsumer (model:IModel) =
     member this.Model = model
@@ -14,7 +15,7 @@ type MyConsumer (model:IModel) =
         member this.HandleModelShutdown (model:IModel, reason:ShutdownEventArgs) = ()
         member this.HandleBasicDeliver (consumerTag:string, deliveryTag:uint64, redelivered:bool, exchange:string, routingKey:string, properties:IBasicProperties, body:byte[]) = 
             if body <> null then
-                let message = Encoding.UTF8.GetString(body)
+                let message = Message.Decode(body)
                 printMailbox |> List.iter( fun mbox -> mbox.Post(message))
             ()
 

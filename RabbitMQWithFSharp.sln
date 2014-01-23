@@ -7,6 +7,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Publisher", "RabbitMQWithFS
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Subscriber", "Subscriber\Subscriber.fsproj", "{3040DB3D-7A5F-44FC-AFDC-22EBDEF41C93}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MessageContracts", "MessageContracts\MessageContracts.fsproj", "{E9EB75B1-1221-4F51-9405-0D5CBF6D963B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{3040DB3D-7A5F-44FC-AFDC-22EBDEF41C93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3040DB3D-7A5F-44FC-AFDC-22EBDEF41C93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3040DB3D-7A5F-44FC-AFDC-22EBDEF41C93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9EB75B1-1221-4F51-9405-0D5CBF6D963B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9EB75B1-1221-4F51-9405-0D5CBF6D963B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9EB75B1-1221-4F51-9405-0D5CBF6D963B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9EB75B1-1221-4F51-9405-0D5CBF6D963B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
