@@ -15,7 +15,7 @@ type MyConsumer (model:IModel) =
         member this.HandleBasicDeliver (consumerTag:string, deliveryTag:uint64, redelivered:bool, exchange:string, routingKey:string, properties:IBasicProperties, body:byte[]) = 
             if body <> null then
                 let message = Encoding.UTF8.GetString(body)
-                printMailbox.Post(message)
+                printMailbox |> List.iter( fun mbox -> mbox.Post(message))
             ()
 
         member this.add_ConsumerCancelled  (value:Events.ConsumerCancelledEventHandler) = ()

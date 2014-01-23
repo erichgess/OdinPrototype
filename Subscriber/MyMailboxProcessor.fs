@@ -1,6 +1,6 @@
 ﻿module MyMailboxProcessor
 
-let printMailbox = MailboxProcessor.Start(
+let printMailbox = [    MailboxProcessor.Start(
                                 fun mbox ->
                                     let rec loop() = 
                                         async{
@@ -9,4 +9,14 @@ let printMailbox = MailboxProcessor.Start(
                                             return! loop()
                                         }
                                     loop()
-                                )
+                                );
+                        MailboxProcessor.Start(
+                                fun mbox ->
+                                    let rec loop() = 
+                                        async{
+                                            let! msg = mbox.Receive()
+                                            printfn "Mailbox2: %s" msg
+                                            return! loop()
+                                        }
+                                    loop()
+                                );]
