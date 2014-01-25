@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Publisher", "RabbitMQWithFSharp\Publisher.fsproj", "{161809BA-CD75-4E9C-A7FA-697E375285B9}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Subscriber", "Subscriber\Subscriber.fsproj", "{3040DB3D-7A5F-44FC-AFDC-22EBDEF41C93}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MessageContracts", "MessageContracts\MessageContracts.fsproj", "{E9EB75B1-1221-4F51-9405-0D5CBF6D963B}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ConsoleTester", "ConsoleTester\ConsoleTester.fsproj", "{BAE28B05-06F4-4F45-B6EB-AFC518A687BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{E9EB75B1-1221-4F51-9405-0D5CBF6D963B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9EB75B1-1221-4F51-9405-0D5CBF6D963B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9EB75B1-1221-4F51-9405-0D5CBF6D963B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAE28B05-06F4-4F45-B6EB-AFC518A687BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAE28B05-06F4-4F45-B6EB-AFC518A687BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAE28B05-06F4-4F45-B6EB-AFC518A687BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAE28B05-06F4-4F45-B6EB-AFC518A687BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
