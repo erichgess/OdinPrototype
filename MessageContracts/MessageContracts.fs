@@ -11,7 +11,7 @@ open System.Runtime.Serialization.Formatters.Binary
 
 [<KnownType("GetKnownTypes")>]
 type Message =
-    | TypeA of int
+    | TypeA of float32
     | TypeB of string
     with
     static member GetKnownTypes() =
