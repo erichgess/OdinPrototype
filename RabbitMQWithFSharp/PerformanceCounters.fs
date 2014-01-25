@@ -3,7 +3,9 @@
     open System.Diagnostics
     open System.Linq
 
-    let GetPerformanceCounter category counter =
-        let counter =   PerformanceCounterCategory.GetCategories() 
+    let GetPerformanceCounter category counterName =
+        let counter = PerformanceCounterCategory.GetCategories() 
                         |> Array.find ( fun cat -> cat.CategoryName = category) 
-        counter.GetCounters("_Total")
+        let counter = counter.GetCounters("_Total")
+                        |> Array.find ( fun cnt -> cnt.CounterName = counterName )
+        ( fun () -> counter.NextValue() )

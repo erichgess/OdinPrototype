@@ -5,6 +5,15 @@ open RabbitMQ.Client
 open System.Text
 open MessageContracts
 open PerformanceCounters
+open System.IO
+open System.Runtime.Serialization
+open System.Runtime.Serialization.Formatters.Binary
+
+let BinaryEncode a =
+    use ms = new MemoryStream()
+    let bf = new BinaryFormatter()
+    bf.Serialize(ms, a)
+    ms.GetBuffer()
 
 let CreateConnectionFactory () = new ConnectionFactory()
 let GetConnection (factory:ConnectionFactory) = factory.CreateConnection ()
@@ -21,11 +30,11 @@ let main argv =
     let channel = GetChannel connection
 
     channel.QueueDeclare( "fsharp-queue", false, false, false, null) |> ignore
-    let cpuCounter = GetPerformanceCounter "Processor" |> Array.find ( fun cnt -> cnt.CounterName = "% Processor Time")
+    let cpuCounter = GetPerformanceCounter "Processor" "% Processor Time"
     while true do
-        PublishMessage channel (TypeA(cpuCounter.NextValue()).Encode())
+        PublishMessage channel (TypeA( cpuCounter () ) |> BinaryEncode )
         PublishMessage channel (TypeB("string").Encode())
-        System.Threading.Thread.Sleep(10)
+        System.Threading.Thread.Sleep(150)
 
     channel.Close()
     connection.Close()
