@@ -33,8 +33,7 @@ let main argv =
     let cpuCounter = GetPerformanceCounter "Processor" "% Processor Time"
     while true do
         PublishMessage channel (TypeA( cpuCounter () ) |> BinaryEncode )
-        PublishMessage channel (TypeB("string").Encode())
-        System.Threading.Thread.Sleep(150)
+        System.Threading.Thread.Sleep(50)
 
     channel.Close()
     connection.Close()
