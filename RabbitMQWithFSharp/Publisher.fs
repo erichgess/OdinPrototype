@@ -47,10 +47,10 @@ let main argv =
     let cpuCounter = GetPerformanceCounter "Processor" "% Processor Time"
 
     let mbox = publisher()
-    mbox.Start()
 
     while true do
         let cpu = cpuCounter ()
         mbox.Post (TypeA(cpu))
+        System.Threading.Thread.Sleep(500)
 
     0 // return an integer exit code
