@@ -9,7 +9,7 @@ let printMailbox = [    MailboxProcessor.Start(
                                             let! msg = mbox.Receive()
 
                                             match msg with
-                                            | TypeA(i) -> printfn "Mailbox: %f" i
+                                            | TypeA(n, i) -> printfn "%s: %f" n i
                                             | TypeB(s) -> printfn "Mailbox: %s" s
                                             return! loop()
                                         }
@@ -22,7 +22,7 @@ let printMailbox = [    MailboxProcessor.Start(
                                             let! msg = mbox.Receive()
 
                                             match msg with
-                                            | TypeA(i) -> printfn "Mailbox: %f" i
+                                            | TypeA(n, i) -> printfn "%s: %f" n i
                                             | TypeB(s) -> printfn "Mailbox: %s" s
 
                                             return! loop()
