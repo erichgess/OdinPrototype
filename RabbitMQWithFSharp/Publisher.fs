@@ -23,18 +23,34 @@ let PublishMessage (channel:IModel) (message) =
     let encodedMessage = message
     channel.BasicPublish ( "", "fsharp-queue", null, encodedMessage )
 
+let publisher () = MailboxProcessor.Start(
+                                fun mbox ->
+                                    let connectionFactory = CreateConnectionFactory ()
+                                    let connection = GetConnection connectionFactory
+                                    let channel = GetChannel connection
+
+                                    channel.QueueDeclare( "fsharp-queue", false, false, false, null) |> ignore
+
+                                    let rec loop() = 
+                                        async{
+                                            let! msg = mbox.Receive()
+                                            printfn "%A" msg
+                                            PublishMessage channel (msg |> BinaryEncode )
+                                            return! loop()
+                                        }
+                                    loop()
+                                );
+
 [<EntryPoint>]
 let main argv = 
-    let connectionFactory = CreateConnectionFactory ()
-    let connection = GetConnection connectionFactory
-    let channel = GetChannel connection
-
-    channel.QueueDeclare( "fsharp-queue", false, false, false, null) |> ignore
+    
     let cpuCounter = GetPerformanceCounter "Processor" "% Processor Time"
-    while true do
-        PublishMessage channel (TypeA( cpuCounter () ) |> BinaryEncode )
-        System.Threading.Thread.Sleep(50)
 
-    channel.Close()
-    connection.Close()
+    let mbox = publisher()
+    mbox.Start()
+
+    while true do
+        let cpu = cpuCounter ()
+        mbox.Post (TypeA(cpu))
+
     0 // return an integer exit code
