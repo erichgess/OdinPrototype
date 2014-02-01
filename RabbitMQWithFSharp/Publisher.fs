@@ -41,16 +41,30 @@ let publisher () = MailboxProcessor.Start(
                                     loop()
                                 );
 
+let cpuPoller (publisher: MailboxProcessor<Message>) = MailboxProcessor.Start(
+                                                        fun mbox -> 
+                                                            let cpuCounter = GetPerformanceCounter "Processor" "% Processor Time"
+
+                                                            let rec loop() = 
+                                                                async{
+                                                                    let! msg = mbox.Receive()
+                                                                    let cpu = cpuCounter ()
+                                                                    publisher.Post (TypeA(cpu))
+                                                                    return! loop()
+                                                                }
+                                                            loop()
+                                                    )
+
 [<EntryPoint>]
 let main argv = 
     
     let cpuCounter = GetPerformanceCounter "Processor" "% Processor Time"
 
     let mbox = publisher()
+    let cpuBox = cpuPoller mbox
 
     while true do
-        let cpu = cpuCounter ()
-        mbox.Post (TypeA(cpu))
+        cpuBox.Post ()
         System.Threading.Thread.Sleep(500)
 
     0 // return an integer exit code
