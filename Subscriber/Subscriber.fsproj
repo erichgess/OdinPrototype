@@ -53,7 +53,7 @@
   <ItemGroup>
     <Compile Include="MyMailboxProcessor.fs" />
     <Compile Include="MyConsumer.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="Subscriber.fs" />
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>

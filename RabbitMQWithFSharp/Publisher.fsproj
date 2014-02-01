@@ -52,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PerformanceCounters.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="Publisher.fs" />
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
