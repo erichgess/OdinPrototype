@@ -59,10 +59,10 @@ let main argv =
     let mbox = publisher()
 
     let cpuCounter = GetPerformanceCounter "Processor" "% Processor Time"
-    let cpuBox = cpuPoller mbox "%CPU" cpuCounter
+    let cpuBox =  [ cpuPoller mbox "%CPU" cpuCounter;]
 
     while true do
-        cpuBox.Post ()
-        System.Threading.Thread.Sleep(50)
+        cpuBox |> List.iter (fun m -> m.Post () )
+        System.Threading.Thread.Sleep(1000)
 
     0 // return an integer exit code
