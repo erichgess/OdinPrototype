@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Publisher", "RabbitMQWithFSharp\Publisher.fsproj", "{161809BA-CD75-4E9C-A7FA-697E375285B9}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ActorModelPublisher", "RabbitMQWithFSharp\ActorModelPublisher.fsproj", "{161809BA-CD75-4E9C-A7FA-697E375285B9}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Subscriber", "Subscriber\Subscriber.fsproj", "{3040DB3D-7A5F-44FC-AFDC-22EBDEF41C93}"
 EndProject
