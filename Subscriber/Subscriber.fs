@@ -27,9 +27,10 @@ let main argv =
     let consumer = Consume channel "fsharp-queue"
     let aStream, bStream = consumer.Subject |> Observable.partition ( fun m -> match m with | TypeA(_) -> true | _ -> false)
 
-    aStream          |> Observable.filter( fun m -> match m with | TypeA(m,a) when a > 40.0f -> true | _ -> false)
-                     |> Observable.subscribe( typeAMailbox.Post )
-                     |> ignore
+    let f x = x |> Observable.filter( fun m -> match m with | TypeA(m,a) when a > 40.0f -> true | _ -> false)
+                |> Observable.subscribe( typeAMailbox.Post )
+                |> ignore
+    f aStream          
 
     bStream          |> Observable.subscribe( typeBMailbox.Post )
                      |> ignore

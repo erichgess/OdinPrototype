@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MyMailboxProcessor.fs" />
+    <Compile Include="StreamListener.fs" />
     <Compile Include="MyConsumer.fs" />
     <Compile Include="Subscriber.fs" />
     <None Include="App.config" />
