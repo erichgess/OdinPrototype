@@ -2,30 +2,30 @@
 
 open MessageContracts
 
-let printMailbox = [    MailboxProcessor.Start(
-                                fun mbox ->
-                                    let rec loop() = 
-                                        async{
-                                            let! msg = mbox.Receive()
+let typeAMailbox = MailboxProcessor.Start(
+                        fun mbox ->
+                            let rec loop() = 
+                                async{
+                                    let! msg = mbox.Receive()
 
-                                            match msg with
-                                            | TypeA(n, i) -> printfn "%s: %f" n i
-                                            | TypeB(s) -> printfn "Mailbox: %s" s
-                                            return! loop()
-                                        }
-                                    loop()
-                                );
-                        MailboxProcessor.Start(
-                                fun mbox ->
-                                    let rec loop() = 
-                                        async{
-                                            let! msg = mbox.Receive()
+                                    match msg with
+                                    | TypeA(n, i) -> printfn "%s: %f" n i
+                                    | _ -> printfn "Nothing"
+                                    return! loop()
+                                }
+                            loop()
+                        )
 
-                                            match msg with
-                                            | TypeA(n, i) -> printfn "%s: %f" n i
-                                            | TypeB(s) -> printfn "Mailbox: %s" s
+let typeBMailbox = MailboxProcessor.Start(
+                        fun mbox ->
+                            let rec loop() = 
+                                async{
+                                    let! msg = mbox.Receive()
 
-                                            return! loop()
-                                        }
-                                    loop()
-                                );]
+                                    match msg with
+                                    | TypeB(n) -> printfn "%s" n
+                                    | _ -> printfn "Nothing"
+                                    return! loop()
+                                }
+                            loop()
+                        )

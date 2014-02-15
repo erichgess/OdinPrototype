@@ -25,10 +25,13 @@ let main argv =
     channel.QueueDeclare( "fsharp-queue", false, false, false, null) |> ignore
 
     let consumer = Consume channel "fsharp-queue"
-    consumer.Subject |> Observable.filter( fun m -> match m with | TypeA(_) -> true | _ -> false)
-                     |> Observable.filter( fun m -> match m with | TypeA(m,a) when a > 40.0f -> true | _ -> false)
-                     |> Observable.map( fun m -> (m, System.DateTime.Now ) )
-                     |> Observable.subscribe( fun a -> printfn "%A" a )
+    let aStream, bStream = consumer.Subject |> Observable.partition ( fun m -> match m with | TypeA(_) -> true | _ -> false)
+
+    aStream          |> Observable.filter( fun m -> match m with | TypeA(m,a) when a > 40.0f -> true | _ -> false)
+                     |> Observable.subscribe( typeAMailbox.Post )
+                     |> ignore
+
+    bStream          |> Observable.subscribe( typeBMailbox.Post )
                      |> ignore
 
     while true do ()
