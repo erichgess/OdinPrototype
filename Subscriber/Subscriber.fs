@@ -4,6 +4,7 @@
 open RabbitMQ.Client
 open System.Text
 open MyConsumer
+open MyMailboxProcessor
 
 let CreateConnectionFactory () = new ConnectionFactory()
 let GetConnection (factory:ConnectionFactory) = factory.CreateConnection ()
@@ -21,7 +22,8 @@ let main argv =
     let channel = GetChannel connection
     channel.QueueDeclare( "fsharp-queue", false, false, false, null) |> ignore
 
-    Consume channel "fsharp-queue" |> ignore
+    let consumer = Consume channel "fsharp-queue"
+    consumer.Subject.Subscribe(printMailbox.Head.Post) |> ignore
 
     while true do ()
 
