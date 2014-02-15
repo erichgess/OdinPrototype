@@ -49,6 +49,7 @@ let cpuPoller (publisher: MailboxProcessor<Message>) name counter =
                     let! msg = mbox.Receive()
                     let value = counter ()
                     publisher.Post (TypeA(name, value))
+                    publisher.Post ( TypeB("Hey, man"))
                     return! loop()
                 }
             loop()

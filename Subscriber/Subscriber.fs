@@ -26,8 +26,11 @@ let main argv =
 
     let consumer = Consume channel "fsharp-queue"
     consumer.Subject |> Observable.filter( fun m -> match m with | TypeA(_) -> true | _ -> false)
-                     |> Observable.subscribe( printMailbox.Head.Post )
+                     |> Observable.filter( fun m -> match m with | TypeA(m,a) when a > 40.0f -> true | _ -> false)
+                     |> Observable.map( fun m -> (m, System.DateTime.Now ) )
+                     |> Observable.subscribe( fun a -> printfn "%A" a )
                      |> ignore
+
     while true do ()
 
     channel.Close()
