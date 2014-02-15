@@ -5,6 +5,8 @@ open RabbitMQ.Client
 open System.Text
 open MyConsumer
 open MyMailboxProcessor
+open System.Reactive.Linq
+open MessageContracts
 
 let CreateConnectionFactory () = new ConnectionFactory()
 let GetConnection (factory:ConnectionFactory) = factory.CreateConnection ()
@@ -23,8 +25,9 @@ let main argv =
     channel.QueueDeclare( "fsharp-queue", false, false, false, null) |> ignore
 
     let consumer = Consume channel "fsharp-queue"
-    consumer.Subject.Subscribe(printMailbox.Head.Post) |> ignore
-
+    consumer.Subject |> Observable.filter( fun m -> match m with | TypeA(_) -> true | _ -> false)
+                     |> Observable.subscribe( printMailbox.Head.Post )
+                     |> ignore
     while true do ()
 
     channel.Close()
