@@ -7,6 +7,7 @@ open MyConsumer
 open MyMailboxProcessor
 open System.Reactive.Linq
 open MessageContracts
+open StreamListener
 
 let CreateConnectionFactory () = new ConnectionFactory()
 let GetConnection (factory:ConnectionFactory) = factory.CreateConnection ()
@@ -16,6 +17,9 @@ let Consume (channel:IModel) queue =
     let consumer = new MyConsumer(channel)
     channel.BasicConsume(queue, true, consumer) |> ignore
     consumer
+
+let typeAListener = { Query = Observable.filter( fun m -> match m with | TypeA(m,a) when a > 40.0f -> true | _ -> false);
+                      Action = typeAMailbox }
 
 [<EntryPoint>]
 let main argv = 
@@ -30,7 +34,7 @@ let main argv =
     let f x = x |> Observable.filter( fun m -> match m with | TypeA(m,a) when a > 40.0f -> true | _ -> false)
                 |> Observable.subscribe( typeAMailbox.Post )
                 |> ignore
-    f aStream          
+    aStream |> typeAListener.Query |> Observable.subscribe (typeAListener.Action.Post)         
 
     bStream          |> Observable.subscribe( typeBMailbox.Post )
                      |> ignore
