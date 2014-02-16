@@ -19,13 +19,13 @@ let Consume (channel:IModel) queue =
     consumer
 
 let typeAListener = { Query = Some(Observable.filter( fun m -> match m with | TypeA(m,a) when a > 40.0f -> true | _ -> false));
-                      Action = typeAMailbox }
+                      Action = typeAMailbox.Post }
 
 let typeBListener = { Query = None;
-                      Action = typeBMailbox }
+                      Action = typeBMailbox.Post }
 
 let typeFunListener = { Query = None;
-                        Action = typeFunctionMailbox }
+                        Action = typeFunctionMailbox.Post }
 
 [<EntryPoint>]
 let main argv = 
@@ -40,10 +40,10 @@ let main argv =
         match listener.Query with
         | Some(query) -> stream |> query 
         | None -> stream
-        |> Observable.subscribe ( listener.Action.Post)
+        |> Observable.subscribe ( listener.Action)
 
-    attachListener consumer.Subject typeAListener
-    attachListener consumer.Subject typeBListener
+    attachListener consumer.Subject typeAListener |> ignore
+    attachListener consumer.Subject typeBListener |> ignore
 
     while true do ()
 
