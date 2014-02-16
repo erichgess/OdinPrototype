@@ -35,8 +35,6 @@ let main argv =
     channel.QueueDeclare( "fsharp-queue", false, false, false, null) |> ignore
 
     let consumer = Consume channel "fsharp-queue"
-    let aStream, xStream = consumer.Subject |> Observable.partition ( fun m -> match m with | TypeA(_) -> true | _ -> false)
-    let bStream, cStream = consumer.Subject |> Observable.partition ( fun m -> match m with | TypeB(_) -> true | _ -> false)
     
     let attachListener stream listener =
         match listener.Query with
@@ -44,8 +42,8 @@ let main argv =
         | None -> stream
         |> Observable.subscribe ( listener.Action.Post)
 
-    attachListener aStream typeAListener      
-    attachListener bStream typeBListener
+    attachListener consumer.Subject typeAListener
+    attachListener consumer.Subject typeBListener
 
     while true do ()
 
