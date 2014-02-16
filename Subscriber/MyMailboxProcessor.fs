@@ -29,3 +29,17 @@ let typeBMailbox = MailboxProcessor.Start(
                                 }
                             loop()
                         )
+
+let typeFunctionMailbox = MailboxProcessor.Start(
+                            fun mbox ->
+                                let rec loop() = 
+                                    async{
+                                        let! msg = mbox.Receive()
+
+                                        match msg with
+                                        | TypeFunction(f) -> f ()
+                                        | _ -> ()
+                                        return! loop()
+                                    }
+                                loop()
+                            )

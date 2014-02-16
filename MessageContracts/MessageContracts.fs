@@ -13,6 +13,7 @@ open System.Runtime.Serialization.Formatters.Binary
 type Message =
     | TypeA of string * float32
     | TypeB of string
+    | TypeFunction of (unit -> unit)    // Unfortunately, this doesn't work as I wanted.  In order for subscriber to deserialize a function it has to have a reference to the Publisher Assembly.
     with
     static member GetKnownTypes() =
         typedefof<Message>.GetNestedTypes(BindingFlags.Public ||| BindingFlags.NonPublic)
@@ -21,8 +22,8 @@ type Message =
     static member Decode(packet : byte[]) =
         use ms = new MemoryStream(packet)
         let bf = new BinaryFormatter()
-        bf.Deserialize(ms) 
-        |> unbox<Message>
+        let de = bf.Deserialize(ms) 
+        de |> unbox<Message>
 
     member this.Encode() =
         use ms = new MemoryStream()

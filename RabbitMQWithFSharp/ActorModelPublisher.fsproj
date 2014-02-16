@@ -8,7 +8,7 @@
     <ProjectGuid>161809ba-cd75-4e9c-a7fa-697e375285b9</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>RabbitMQWithFSharp</RootNamespace>
-    <AssemblyName>RabbitMQWithFSharp</AssemblyName>
+    <AssemblyName>Publisher</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.3.1.0</TargetFSharpCoreVersion>

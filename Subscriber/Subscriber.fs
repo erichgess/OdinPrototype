@@ -24,6 +24,9 @@ let typeAListener = { Query = Some(Observable.filter( fun m -> match m with | Ty
 let typeBListener = { Query = None;
                       Action = typeBMailbox }
 
+let typeFunListener = { Query = None;
+                        Action = typeFunctionMailbox }
+
 [<EntryPoint>]
 let main argv = 
     let connectionFactory = CreateConnectionFactory ()
@@ -32,8 +35,9 @@ let main argv =
     channel.QueueDeclare( "fsharp-queue", false, false, false, null) |> ignore
 
     let consumer = Consume channel "fsharp-queue"
-    let aStream, bStream = consumer.Subject |> Observable.partition ( fun m -> match m with | TypeA(_) -> true | _ -> false)
-
+    let aStream, xStream = consumer.Subject |> Observable.partition ( fun m -> match m with | TypeA(_) -> true | _ -> false)
+    let bStream, cStream = consumer.Subject |> Observable.partition ( fun m -> match m with | TypeB(_) -> true | _ -> false)
+    
     let attachListener stream listener =
         match listener.Query with
         | Some(query) -> stream |> query 
