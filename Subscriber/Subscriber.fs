@@ -18,8 +18,11 @@ let Consume (channel:IModel) queue =
     channel.BasicConsume(queue, true, consumer) |> ignore
     consumer
 
-let typeAListener = { Query = Observable.filter( fun m -> match m with | TypeA(m,a) when a > 40.0f -> true | _ -> false);
+let typeAListener = { Query = Some(Observable.filter( fun m -> match m with | TypeA(m,a) when a > 40.0f -> true | _ -> false));
                       Action = typeAMailbox }
+
+let typeBListener = { Query = None;
+                      Action = typeBMailbox }
 
 [<EntryPoint>]
 let main argv = 
@@ -31,13 +34,14 @@ let main argv =
     let consumer = Consume channel "fsharp-queue"
     let aStream, bStream = consumer.Subject |> Observable.partition ( fun m -> match m with | TypeA(_) -> true | _ -> false)
 
-    let f x = x |> Observable.filter( fun m -> match m with | TypeA(m,a) when a > 40.0f -> true | _ -> false)
-                |> Observable.subscribe( typeAMailbox.Post )
-                |> ignore
-    aStream |> typeAListener.Query |> Observable.subscribe (typeAListener.Action.Post)         
+    let attachListener stream listener =
+        match listener.Query with
+        | Some(query) -> stream |> query 
+        | None -> stream
+        |> Observable.subscribe ( listener.Action.Post)
 
-    bStream          |> Observable.subscribe( typeBMailbox.Post )
-                     |> ignore
+    attachListener aStream typeAListener      
+    attachListener bStream typeBListener
 
     while true do ()
 

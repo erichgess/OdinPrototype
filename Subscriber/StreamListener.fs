@@ -5,4 +5,4 @@
 /// stream of events and 2. a MailboxProcessor which will subscribe to the observable query you define.
 open System
 
-type StreamListener<'a> = { Query: 'a IObservable -> 'a IObservable; Action: 'a MailboxProcessor}
+type StreamListener<'a> = { Query: ('a IObservable -> 'a IObservable) option; Action: 'a MailboxProcessor}
