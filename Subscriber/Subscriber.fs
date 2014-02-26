@@ -18,6 +18,18 @@ let Consume (channel:IModel) queue =
     channel.BasicConsume(queue, true, consumer) |> ignore
     consumer
 
+let CreateRabbitMqEventStream queueName =
+    let connectionFactory = CreateConnectionFactory ()
+    let connection = GetConnection connectionFactory
+    let channel = GetChannel connection
+    channel.QueueDeclare( queueName, false, false, false, null) |> ignore
+
+    let c = Consume channel queueName
+    (c.Subject, fun () -> 
+                    printfn "%A" (connection.Endpoint.HostName)
+                    channel.Close()
+                    connection.Close() )
+
 let typeAListener = { Query = Some(Observable.filter( fun m -> match m with | TypeA(m,a) when a > 30.0f -> true | _ -> false));
                       Action = typeAMailbox.Post }
 
@@ -29,26 +41,20 @@ let typeFunListener = { Query = None;
 
 [<EntryPoint>]
 let main argv = 
-    let connectionFactory = CreateConnectionFactory ()
-    let connection = GetConnection connectionFactory
-    let channel = GetChannel connection
-    channel.QueueDeclare( "fsharp-queue", false, false, false, null) |> ignore
 
-    let consumer = Consume channel "fsharp-queue"
+    let (queueSubject, cleanUpRabbitMq) = CreateRabbitMqEventStream "fsharp-queue"
     
     let attachListener stream listener =
         match listener.Query with
         | Some(query) -> stream |> query 
         | None -> stream
         |> Observable.subscribe ( listener.Action)
-    let attachListenerToMainQueue = attachListener consumer.Subject
+    let attachListenerToMainQueue = attachListener queueSubject
 
     attachListenerToMainQueue typeAListener |> ignore
     attachListenerToMainQueue typeBListener |> ignore
 
     while true do ()
 
-    channel.Close()
-    connection.Close()
-
+    cleanUpRabbitMq ()
     0 // return an integer exit code
