@@ -41,9 +41,10 @@ let main argv =
         | Some(query) -> stream |> query 
         | None -> stream
         |> Observable.subscribe ( listener.Action)
+    let attachListenerToMainQueue = attachListener consumer.Subject
 
-    attachListener consumer.Subject typeAListener |> ignore
-    attachListener consumer.Subject typeBListener |> ignore
+    attachListenerToMainQueue typeAListener |> ignore
+    attachListenerToMainQueue typeBListener |> ignore
 
     while true do ()
 
