@@ -18,10 +18,10 @@ let Consume (channel:IModel) queue =
     channel.BasicConsume(queue, true, consumer) |> ignore
     consumer
 
-let typeAListener = { Query = Some(Observable.filter( fun m -> match m with | TypeA(m,a) when a > 40.0f -> true | _ -> false));
+let typeAListener = { Query = Some(Observable.filter( fun m -> match m with | TypeA(m,a) when a > 30.0f -> true | _ -> false));
                       Action = typeAMailbox.Post }
 
-let typeBListener = { Query = None;
+let typeBListener = { Query = Some(Observable.filter( fun m -> match m with | TypeB(_) -> true | _ -> false ) );
                       Action = typeBMailbox.Post }
 
 let typeFunListener = { Query = None;
