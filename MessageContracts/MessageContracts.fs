@@ -11,9 +11,7 @@ open System.Runtime.Serialization.Formatters.Binary
 
 [<KnownType("GetKnownTypes")>]
 type Message =
-    | TypeA of string * float32
-    | TypeB of string
-    | TypeFunction of (unit -> unit)    // Unfortunately, this doesn't work as I wanted.  In order for subscriber to deserialize a function it has to have a reference to the Publisher Assembly.
+    | DataSet of Map<string,string>   // Unfortunately, this doesn't work as I wanted.  In order for subscriber to deserialize a function it has to have a reference to the Publisher Assembly.
     with
     static member GetKnownTypes() =
         typedefof<Message>.GetNestedTypes(BindingFlags.Public ||| BindingFlags.NonPublic)

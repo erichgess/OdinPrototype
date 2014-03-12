@@ -48,7 +48,7 @@ let cpuPoller (publisher: MailboxProcessor<Message>) name counter =
                 async{
                     let! msg = mbox.Receive()
                     let value = counter ()
-                    publisher.Post (TypeA(name, value))
+                    publisher.Post (DataSet(Map.ofList ["%CPU", value.ToString() ] ))
                     return! loop()
                 }
             loop()
@@ -63,6 +63,6 @@ let main argv =
 
     while true do
         cpuBox |> List.iter (fun m -> m.Post () )
-        System.Threading.Thread.Sleep(1000)
+        System.Threading.Thread.Sleep(10)
 
     0 // return an integer exit code

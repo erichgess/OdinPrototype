@@ -30,14 +30,11 @@ let CreateRabbitMqEventStream queueName =
                     channel.Close()
                     connection.Close() )
 
-let typeAListener = { Query = Some(Observable.filter( fun m -> match m with | TypeA(m,a) when a > 30.0f -> true | _ -> false));
+let typeAListener = { Query = Some(Observable.filter( 
+                                fun m -> 
+                                    match m with
+                                    | DataSet(d) -> System.Double.Parse( d.["%CPU"] )> 30.0));
                       Action = typeAMailbox.Post }
-
-let typeBListener = { Query = Some(Observable.filter( fun m -> match m with | TypeB(_) -> true | _ -> false ) );
-                      Action = typeBMailbox.Post }
-
-let typeFunListener = { Query = None;
-                        Action = typeFunctionMailbox.Post }
 
 [<EntryPoint>]
 let main argv = 
@@ -52,7 +49,6 @@ let main argv =
     let attachListenerToMainQueue = attachListener queueSubject
 
     attachListenerToMainQueue typeAListener |> ignore
-    attachListenerToMainQueue typeBListener |> ignore
 
     while true do ()
 
