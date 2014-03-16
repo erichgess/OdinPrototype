@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{28818A
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "RabbitMQ.FSharp", "RabbitMQ.FSharp\RabbitMQ.FSharp.fsproj", "{E72083DA-2A81-4704-8BEB-953B836DFF9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,10 @@ Global
 		{BAE28B05-06F4-4F45-B6EB-AFC518A687BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAE28B05-06F4-4F45-B6EB-AFC518A687BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAE28B05-06F4-4F45-B6EB-AFC518A687BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E72083DA-2A81-4704-8BEB-953B836DFF9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E72083DA-2A81-4704-8BEB-953B836DFF9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E72083DA-2A81-4704-8BEB-953B836DFF9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E72083DA-2A81-4704-8BEB-953B836DFF9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -23,7 +23,7 @@ type MyConsumer (model:IModel) =
         member this.HandleBasicDeliver (consumerTag:string, deliveryTag:uint64, redelivered:bool, exchange:string, routingKey:string, properties:IBasicProperties, body:byte[]) = 
             if body <> null then
                 let message = Message.Decode(body)
-                printfn "\t\tFrom Queue: %A" message
+                //printfn "\t\tFrom Queue: %A" message
                 subject.OnNext(message)
             ()
 

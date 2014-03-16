@@ -9,7 +9,7 @@ let typeAMailbox = MailboxProcessor.Start(
                                     let! msg = mbox.Receive()
 
                                     match msg with
-                                    | DataSet(m) when m.ContainsKey "%CPU" -> printfn "%%CPU: %s" (m.["%CPU"])
+                                    | DataSet(m) when m.ContainsKey "%CPU" -> () // printfn "%%CPU: %s" (m.["%CPU"])
                                     | _ -> printfn "Nothing"
                                     return! loop()
                                 }

@@ -9,7 +9,7 @@ open System.Reactive.Linq
 open MessageContracts
 open StreamListener
 
-let CreateConnectionFactory () = new ConnectionFactory()
+let CreateConnectionFactory () = new ConnectionFactory(Uri = "amqp://192.168.1.111/")
 let GetConnection (factory:ConnectionFactory) = factory.CreateConnection ()
 let GetChannel (connection:IConnection) = connection.CreateModel()
 

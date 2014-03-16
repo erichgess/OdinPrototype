@@ -15,7 +15,7 @@ let BinaryEncode a =
     bf.Serialize(ms, a)
     ms.GetBuffer()
 
-let CreateConnectionFactory () = new ConnectionFactory()
+let CreateConnectionFactory () = new ConnectionFactory(Uri = "amqp://192.168.1.111/")
 let GetConnection (factory:ConnectionFactory) = factory.CreateConnection ()
 let GetChannel (connection:IConnection) = connection.CreateModel()
 
@@ -56,13 +56,23 @@ let cpuPoller (publisher: MailboxProcessor<Message>) name counter =
 
 [<EntryPoint>]
 let main argv = 
+    let connectionFactory = CreateConnectionFactory ()
+    let connection = GetConnection connectionFactory
+    let channel = GetChannel connection
+
+    channel.QueueDeclare( "fsharp-queue", false, false, false, null) |> ignore
     let mbox = publisher()
 
     let cpuCounter = GetPerformanceCounter "Processor" "% Processor Time"
     let cpuBox =  [ cpuPoller mbox "%CPU" cpuCounter;]
 
     while true do
-        cpuBox |> List.iter (fun m -> m.Post () )
-        System.Threading.Thread.Sleep(10)
+        let value = cpuCounter ()
+        let msg = DataSet(Map.ofList ["%CPU", value.ToString() ] )
+        //printfn "%A" msg
+        PublishMessage channel (msg |> BinaryEncode )
+
+//        cpuBox |> List.iter (fun m -> m.Post () )
+        //System.Threading.Thread.Sleep(10)
 
     0 // return an integer exit code
