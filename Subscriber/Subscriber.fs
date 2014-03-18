@@ -8,33 +8,40 @@ open MyMailboxProcessor
 open System.Reactive.Linq
 open MessageContracts
 open StreamListener
+open RabbitMQ.FSharp.Client
 
-let CreateConnectionFactory () = new ConnectionFactory(Uri = "amqp://192.168.1.111/")
-let GetConnection (factory:ConnectionFactory) = factory.CreateConnection ()
-let GetChannel (connection:IConnection) = connection.CreateModel()
+//let CreateConnectionFactory () = new ConnectionFactory(Uri = "amqp://192.168.1.111/")
+//let GetConnection (factory:ConnectionFactory) = factory.CreateConnection ()
+//let GetChannel (connection:IConnection) = connection.CreateModel()
 
-let Consume (channel:IModel) queue = 
-    let consumer = new MyConsumer(channel)
-    channel.BasicConsume(queue, true, consumer) |> ignore
-    consumer
+//let Consume (channel:IModel) queue = 
+//    let consumer = new MyConsumer(channel)
+//    channel.BasicConsume(queue, true, consumer) |> ignore
+//    consumer
+
+let connection = connectToRabbitMqServerAt "amqp://192.168.137.160/"
+
 
 let CreateRabbitMqEventStream queueName =
-    let connectionFactory = CreateConnectionFactory ()
-    let connection = GetConnection connectionFactory
-    let channel = GetChannel connection
-    channel.QueueDeclare( queueName, false, false, false, null) |> ignore
-
-    let c = Consume channel queueName
-    (c.Subject, fun () -> 
+//    let connectionFactory = CreateConnectionFactory ()
+//    let connection = GetConnection connectionFactory
+//    let channel = GetChannel connection
+//    channel.QueueDeclare( queueName, false, false, false, null) |> ignore
+    let channel = openChannelOn connection
+    let consumer = createQueueConsumer channel queueName
+    let queue = seq{ while true do yield (consumer ()) }
+    (queue.ToObservable (), fun () -> 
                     printfn "%A" (connection.Endpoint.HostName)
                     channel.Close()
                     connection.Close() )
 
 let typeAListener = { Query = Some(Observable.filter( 
-                                fun m -> 
-                                    match m with
-                                    | DataSet(d) -> System.Double.Parse( d.["%CPU"] )> 30.0));
+                                    fun m -> 
+                                        match m with
+                                        | DataSet(d) -> System.Double.Parse( d.["%CPU"] )> 30.0));
                       Action = typeAMailbox.Post }
+
+let stringListener = { Query = None; Action = fun m -> printfn "%s" m}
 
 [<EntryPoint>]
 let main argv = 
@@ -48,7 +55,7 @@ let main argv =
         |> Observable.subscribe ( listener.Action)
     let attachListenerToMainQueue = attachListener queueSubject
 
-    attachListenerToMainQueue typeAListener |> ignore
+    attachListenerToMainQueue stringListener |> ignore
 
     while true do ()
 
