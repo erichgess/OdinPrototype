@@ -6,7 +6,7 @@ open System.Text
 
 module Client =
     let connectToRabbitMqServerAt address = 
-        let factory = new ConnectionFactory(HostName = address)
+        let factory = new ConnectionFactory(Uri = address)
         factory.CreateConnection()
 
     let openChannelOn (connection:IConnection) = connection.CreateModel()
