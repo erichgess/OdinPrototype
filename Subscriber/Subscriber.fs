@@ -10,23 +10,11 @@ open MessageContracts
 open StreamListener
 open RabbitMQ.FSharp.Client
 
-//let CreateConnectionFactory () = new ConnectionFactory(Uri = "amqp://192.168.1.111/")
-//let GetConnection (factory:ConnectionFactory) = factory.CreateConnection ()
-//let GetChannel (connection:IConnection) = connection.CreateModel()
-
-//let Consume (channel:IModel) queue = 
-//    let consumer = new MyConsumer(channel)
-//    channel.BasicConsume(queue, true, consumer) |> ignore
-//    consumer
 
 let connection = connectToRabbitMqServerAt "amqp://192.168.137.160/"
 
 
 let CreateRabbitMqEventStream queueName =
-//    let connectionFactory = CreateConnectionFactory ()
-//    let connection = GetConnection connectionFactory
-//    let channel = GetChannel connection
-//    channel.QueueDeclare( queueName, false, false, false, null) |> ignore
     let channel = openChannelOn connection
     let consumer = createQueueConsumer channel queueName
     let queue = seq{ while true do yield (consumer ()) }
