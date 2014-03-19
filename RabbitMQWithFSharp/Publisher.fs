@@ -41,9 +41,9 @@ let main argv =
     let queueWriter = createQueueWriter channel "fsharp-queue"
     while true do
         let value = cpuCounter ()
-        let msg = sprintf "%%CPU=%f" value
+        let msg = sprintf "%%CPU=%f;GUID=%A" value (System.Guid.NewGuid())
         printfn "%s" msg
         queueWriter msg
-        System.Threading.Thread.Sleep(100)
+        //System.Threading.Thread.Sleep(1000)
 
     0 // return an integer exit code
