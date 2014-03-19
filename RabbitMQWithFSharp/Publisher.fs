@@ -32,7 +32,7 @@ let cpuPoller (publisher: MailboxProcessor<Message>) name counter =
 
 [<EntryPoint>]
 let main argv = 
-    let connection = connectToRabbitMqServerAt "amqp://192.168.137.44/"
+    let connection = connectToRabbitMqServerAt "amqp://192.168.1.139/"
     let channel = openChannelOn connection
 
     channel.QueueDeclare( "fsharp-queue", false, false, false, null) |> ignore
@@ -44,5 +44,6 @@ let main argv =
         let msg = sprintf "%%CPU=%f" value
         printfn "%s" msg
         queueWriter msg
+        System.Threading.Thread.Sleep(100)
 
     0 // return an integer exit code

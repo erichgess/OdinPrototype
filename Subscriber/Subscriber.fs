@@ -11,7 +11,7 @@ open StreamListener
 open RabbitMQ.FSharp.Client
 
 
-let connection = connectToRabbitMqServerAt "amqp://192.168.137.160/"
+let connection = connectToRabbitMqServerAt "amqp://192.168.1.139/"
 
 
 let CreateRabbitMqEventStream queueName =
