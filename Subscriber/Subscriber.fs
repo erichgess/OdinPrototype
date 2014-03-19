@@ -10,20 +10,18 @@ open MessageContracts
 open StreamListener
 open RabbitMQ.FSharp.Client
 
-
 let connection = connectToRabbitMqServerAt "amqp://192.168.1.139/"
-
 
 let CreateRabbitMqEventStream queueName =
     let channel = openChannelOn connection
     let consumer = createQueueConsumer channel queueName
     let queue = seq{ while true do yield (consumer ()) }
-    (queue.ToObservable (), fun () -> 
+    (queue.ToObservable (), fun () ->
                     printfn "%A" (connection.Endpoint.HostName)
                     channel.Close())
 
-let typeAListener = { Query = Some(Observable.filter( 
-                                    fun m -> 
+let typeAListener = { Query = Some(Observable.filter(
+                                    fun m ->
                                         match m with
                                         | DataSet(d) -> System.Double.Parse( d.["%CPU"] )> 30.0));
                       Action = typeAMailbox.Post }
@@ -32,14 +30,14 @@ let stringListener = { Query = None; Action = fun m -> printfn "1 - %s" m}
 let stringListener2 = { Query = None; Action = fun m -> printfn "2 - %s" m}
 
 [<EntryPoint>]
-let main argv = 
+let main argv =
 
     let (queueSubject, cleanUpReader) = CreateRabbitMqEventStream "fsharp-queue"
     let (queueSubject2,_) = CreateRabbitMqEventStream "fsharp-queue"
 
     let attachListener stream listener =
         match listener.Query with
-        | Some(query) -> stream |> query 
+        | Some(query) -> stream |> query
         | None -> stream
         |> Observable.subscribe ( listener.Action)
 
